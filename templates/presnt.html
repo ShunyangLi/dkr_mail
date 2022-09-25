@@ -14,18 +14,28 @@
 
     <body>
 
-        <div class="container" style="margin-top: 20%; margin-left: 20%;">
+        <div class="container" style="margin-top: 15%; margin-left: 20%;">
             <div class="row">
               <div class="col">
-                <form>
+                <form method="post">
                     <div class="row form-group">
-                        <label for="date" class="col-sm-2 col-form-label">Presenters</label>
+                        <label for="date" class="col-sm-2 col-form-label">Current Presenters</label>
                         <div class="col-sm-4">
                             <div class="input-group date">
-                                <input type="text" class="form-control" name = "people" required>
+                                <input type="text" class="form-control" name = "people1" required>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row form-group" style="margin-top: 2%;">
+                        <label for="date" class="col-sm-2 col-form-label">Next Presenters</label>
+                        <div class="col-sm-4">
+                            <div class="input-group date">
+                                <input type="text" class="form-control" name = "people2" required>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row form-group" style="margin-top: 2%;">
                         <label for="date" class="col-sm-2 col-form-label">Next Week</label>
                         <div class="col-sm-4">
@@ -62,6 +72,12 @@
                         </div>
                     </div>
                 </form>
+
+                {% if re %}
+                    <div class="alert alert-danger">
+                        <strong>Warning!</strong> {{message}}
+                    </div>
+                {% endif %}
               </div>
             </div>
           </div>

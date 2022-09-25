@@ -15,9 +15,9 @@ def start_send(app, message):
 
 
 # send the mail with html template
-def send_mail(recipient, title, template, ics_path, **kwargs):
-    message = Message(title, recipients=[recipient])
+def send_mail(recipients, title, template, ics_path, **kwargs):
+    message = Message(title, recipients=recipients)
     message.html = render_template(template + '.html', **kwargs)
-    message.attach('event.ics', 'text/calendar', data=open(os.join(HOMEPATH, '/static/{}'.format(ics_path))))
+    message.attach('event.ics', 'text/calendar;method=REQUEST;name={}.ics'.format(ics_path), data=open(HOMEPATH + '/static/{}.ics'.format(ics_path)).read())
     thr = Thread(target=start_send, args=[app, message])
     thr.start()
