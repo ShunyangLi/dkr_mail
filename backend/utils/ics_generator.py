@@ -46,7 +46,7 @@ def ics_gener_upload(attendees, start_date, end_date, filename):
         cal.add('attendee', 'MAILTO:{}'.format(attendee))
 
     event = Event()
-    event.add('summary', 'Group Meeting Presentation')
+    event.add('summary', 'Upload Slides To WeChat Group')
 
     sds = start_date.split('/')
     eds = end_date.split('/')

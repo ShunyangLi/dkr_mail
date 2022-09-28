@@ -1,4 +1,3 @@
-from distutils.command.upload import upload
 import pytz
 from utils.db_handling import query_db
 from datetime import datetime, timedelta
@@ -38,6 +37,10 @@ def handle_presenter(ca, na, cd, nd):
 
     uploadDate = currentDate - timedelta(days=2)
 
+    temp = query_db("select name, present from current where institution = 'SYD'")
+    for d in temp:
+        query_db("insert into past values(?,?)", (d["name"], d["present"],))
+
 
     query_db("delete from current")
     query_db("delete from next")
@@ -45,17 +48,19 @@ def handle_presenter(ca, na, cd, nd):
     # record the current presenters
     for index, user in enumerate(cas):
         if index == len(cas) - 1:
-            n1 += "and {} ({})".format(user["Name"], user["Institution"])
+            n1 += "and {} ({})".format(user["name"], user["institution"])
         else:
-            n1 +="{} ({}), ".format(user["Name"], user["Institution"])
-        query_db("insert into current values(?,?,?,?,?)", (user["Name"], user["Email"], user["Institution"], uploadDate.strftime("%m/%d/%Y"), currentDate.strftime("%m/%d/%Y"), ))
+            n1 +="{} ({}), ".format(user["name"], user["institution"])
+        query_db("insert into current values(?,?,?,?,?)", (user["name"], user["email"], user["institution"],
+                                                           uploadDate.strftime("%m/%d/%Y"), currentDate.strftime("%m/%d/%Y"), ))
     
     for index, user in enumerate(nas):
         if index == len(nas) - 1:
-            n2 += "and {} ({})".format(user["Name"], user["Institution"])
+            n2 += "and {} ({})".format(user["name"], user["Institution"])
         else:
-            n2 +="{} ({}), ".format(user["Name"], user["Institution"])
-        query_db("insert into next values(?,?,?,?)", (user["Name"], user["Email"], user["Institution"], nextDate.strftime("%m/%d/%Y"), ))
+            n2 +="{} ({}), ".format(user["name"], user["Institution"])
+        query_db("insert into next values(?,?,?,?)", (user["name"], user["Email"], user["institution"],
+                                                      nextDate.strftime("%m/%d/%Y"), ))
     
 
     ics_gener(cas_email, cd, cd, "Event")
@@ -70,6 +75,7 @@ def handle_presenter(ca, na, cd, nd):
 
     send_mail(nas_email, "Group Meeting Presentation", "notice", "FutureEvent", n1=n1,n2=n2,current_date=currentDate.strftime("%m/%d/%Y"),upload_date=uploadDate.strftime("%m/%d/%Y"), next_date=nextDate.strftime("%m/%d/%Y"))
     return None
+
 
 def handle_upload():
     """
