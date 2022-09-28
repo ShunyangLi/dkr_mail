@@ -5,6 +5,11 @@ const menu = [
     icon: "mail"
   },
   {
+    key: "/edit",
+    title: "Edit",
+    icon: "edit"
+  },
+  {
     key: "/result",
     title: "Result",
     icon: "result"

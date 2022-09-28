@@ -56,10 +56,10 @@ def handle_presenter(ca, na, cd, nd):
     
     for index, user in enumerate(nas):
         if index == len(nas) - 1:
-            n2 += "and {} ({})".format(user["name"], user["Institution"])
+            n2 += "and {} ({})".format(user["name"], user["institution"])
         else:
-            n2 +="{} ({}), ".format(user["name"], user["Institution"])
-        query_db("insert into next values(?,?,?,?)", (user["name"], user["Email"], user["institution"],
+            n2 +="{} ({}), ".format(user["name"], user["institution"])
+        query_db("insert into next values(?,?,?,?)", (user["name"], user["email"], user["institution"],
                                                       nextDate.strftime("%m/%d/%Y"), ))
     
 
@@ -71,9 +71,13 @@ def handle_presenter(ca, na, cd, nd):
 
     cas_email.append("yangzhengyi188@gmail.com")
 
-    send_mail(cas_email, "Group Meeting Presentation", "notice", "Event", n1=n1,n2=n2,current_date=currentDate.strftime("%m/%d/%Y"),upload_date=uploadDate.strftime("%m/%d/%Y"), next_date=nextDate.strftime("%m/%d/%Y"))
+    send_mail(cas_email, "Group Meeting Presentation", "notice", "Event",
+              n1=n1, n2=n2, current_date=currentDate.strftime("%m/%d/%Y"),
+              upload_date=uploadDate.strftime("%m/%d/%Y"), next_date=nextDate.strftime("%m/%d/%Y"))
 
-    send_mail(nas_email, "Group Meeting Presentation", "notice", "FutureEvent", n1=n1,n2=n2,current_date=currentDate.strftime("%m/%d/%Y"),upload_date=uploadDate.strftime("%m/%d/%Y"), next_date=nextDate.strftime("%m/%d/%Y"))
+    send_mail(nas_email, "Group Meeting Presentation", "notice", "FutureEvent",
+              n1=n1, n2=n2, current_date=currentDate.strftime("%m/%d/%Y"),
+              upload_date=uploadDate.strftime("%m/%d/%Y"), next_date=nextDate.strftime("%m/%d/%Y"))
     return None
 
 

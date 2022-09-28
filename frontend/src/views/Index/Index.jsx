@@ -5,9 +5,17 @@ import { Button, Form, Icon, message, Select, DatePicker } from "antd";
 import axios from "@/api";
 import { API } from "@/api/config";
 import "./index.scss";
+import moment from "moment";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+const dateFormat = "MM/DD/YYYY";
+
+Date.prototype.addDays = function(days) {
+  var date = new Date(this.valueOf());
+  date.setDate(date.getDate() + days);
+  return date;
+};
 
 const formItemLayout = {
   labelCol: {
@@ -25,7 +33,9 @@ class Index extends Component {
     super(props);
     this.state = {
       children: [],
-      date: []
+      date: [],
+      next_student: [],
+      range_date: []
     };
   }
 
@@ -40,6 +50,35 @@ class Index extends Component {
         });
         this.setState({
           children: temp
+        });
+      })
+      .catch(function(error) {
+        message.error(error.message);
+      });
+
+    axios
+      .get(`${API}/user/next`, {})
+      .then(res => {
+        let temp = [];
+        let temp_date = "";
+        res.data.data.forEach(item => {
+          temp.push(item.name);
+          temp_date = item.present;
+        });
+
+        let [month, day, year] = temp_date.split("/");
+        let date = new Date(+year, +month - 1, +day).addDays(8);
+        let date_string = date.toISOString().slice(0, 10);
+        [year, month, day] = date_string.split("-");
+        date_string = month + "/" + day + "/" + year;
+        let drange = [
+          moment(temp_date, dateFormat),
+          moment(date_string, dateFormat)
+        ];
+
+        this.setState({
+          next_student: temp,
+          range_date: drange
         });
       })
       .catch(function(error) {
@@ -107,7 +146,8 @@ class Index extends Component {
                   required: true,
                   message: "Please select next week presenters"
                 }
-              ]
+              ],
+              initialValue: this.state.next_student
             })(
               <Select
                 mode="multiple"
@@ -147,7 +187,10 @@ class Index extends Component {
           <Form.Item label="Present Date" name="time">
             {/* can use initialValue */}
             {getFieldDecorator("time", {
-              rules: [{ required: true, message: "Please select present date" }]
+              rules: [
+                { required: true, message: "Please select present date" }
+              ],
+              initialValue: this.state.range_date
             })(
               <RangePicker
                 format={"MM/DD/YYYY"}

@@ -3,31 +3,26 @@ import {
   MailOutlined,
   SettingOutlined,
   NumberOutlined,
-  NotificationOutlined
-} from '@ant-design/icons';
+  NotificationOutlined,
+  EditOutlined
+} from "@ant-design/icons";
 
-const mail = () => (
-    <MailOutlined />
-);
+const mail = () => <MailOutlined />;
 
-const notice = () => (
-    <NotificationOutlined />
-);
+const notice = () => <NotificationOutlined />;
 
+const result = () => <NumberOutlined />;
 
-const result = () => (
-    <NumberOutlined />
-);
+const manage = () => <SettingOutlined />;
 
-const manage = () => (
-    <SettingOutlined />
-);
+const edit = () => <EditOutlined />;
 
 const icons = {
   mail: mail,
   result: result,
   notice: notice,
-  manage: manage
+  manage: manage,
+  edit: edit
 };
 
 export default icons;

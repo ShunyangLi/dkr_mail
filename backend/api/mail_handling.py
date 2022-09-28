@@ -4,6 +4,7 @@ from flask_restplus import abort, Resource
 from utils.request_handling import get_request_args,get_header
 from utils.db_handling import query_db
 from utils.presenter_handling import handle_presenter, handle_upload
+from utils.update_presenter import update_presenter
 
 mails = api.namespace('user', description="Get all the user names")
 
@@ -40,7 +41,8 @@ class Send(Resource):
 
         if len(nstudents) < 3 or len(nnstudents) < 3:
             abort(403, message="Not enough students")
-        handle_presenter(nstudents, nnstudents, ndate, nndate)
+        # handle_presenter(nstudents, nnstudents, ndate, nndate)
+        print(nstudents, nnstudents, ndate, nndate)
         return make_response(jsonify({"message": "send success"}), 200)
 
 
@@ -132,4 +134,50 @@ class DeleteUserInfo(Resource):
 
         query_db("delete from contact where name = ?", (name,))
         return make_response(jsonify({"message": "success"}), 200)
+
+
+@mails.route('/next')
+class NextWeekP(Resource):
+    @mails.response(200, 'Success')
+    @mails.doc(description="return next week's presenters")
+    def get(self):
+        data = query_db("select name, email, institution, present from current ")
+        for index, d in enumerate(data):
+            d["key"] = index + 1
+
+        return make_response(jsonify({"message": "success", "data": data}), 200)
+
+    @mails.response(400, 'Missing args')
+    def put(self):
+        name = get_request_args("name", str)
+        email = get_request_args("email", str)
+        institution = get_request_args("institution", str)
+
+        query_db("update current set name = ?, email = ? where institution = ?", (name, email, institution))
+        update_presenter(email, True)
+
+        return make_response(jsonify({"message": "success"}), 200)
+
+
+@mails.route('/nnext')
+class NNextWeekP(Resource):
+    @mails.response(200, 'Success')
+    @mails.doc(description="return next next week's presenters")
+    def get(self):
+        data = query_db("select name, email, institution, present from next ")
+        for index, d in enumerate(data):
+            d["key"] = index + 1
+
+        return make_response(jsonify({"message": "success", "data": data}), 200)
+
+    @mails.response(400, 'Missing args')
+    def put(self):
+        name = get_request_args("name", str)
+        email = get_request_args("email", str)
+        institution = get_request_args("institution", str)
+
+        query_db("update next set name = ?, email = ? where institution = ?", (name, email, institution))
+        update_presenter(email, False)
+        return make_response(jsonify({"message": "success"}), 200)
+
 
