@@ -77,22 +77,25 @@ def handle_presenter(ca, na, cd, nd):
     return None
 
 
-def handle_upload():
+def handle_upload(students):
     """
     send and email tell them to upload ppt
     """
-    users = query_db("select * from current")
+    users = []
+    for student in students:
+        user = query_db("select * from current where name = ?", (student,))
+        users.append(user[0])
     emails = []
     n1 = ""
     uploadDate = ""
 
     for index, user in enumerate(users):
-        emails.append(user["Email"])
+        emails.append(user["email"])
         uploadDate = user["upload"]
         if index == len(users) - 1:
-            n1 += "and {} ({})".format(user["Name"], user["Institution"])
+            n1 += "and {} ({})".format(user["name"], user["institution"])
         else:
-            n1 +="{} ({}), ".format(user["Name"], user["Institution"])
+            n1 +="{} ({}), ".format(user["name"], user["institution"])
     
     ics_gener_upload(emails, uploadDate, uploadDate, "Upload")
 

@@ -40,8 +40,7 @@ class Send(Resource):
 
         if len(nstudents) < 3 or len(nnstudents) < 3:
             abort(403, message="Not enough students")
-        print(nstudents, nnstudents, ndate, nndate)
-        # handle_presenter(nstudents, nnstudents, ndate, nndate)
+        handle_presenter(nstudents, nnstudents, ndate, nndate)
         return make_response(jsonify({"message": "send success"}), 200)
 
 
@@ -51,7 +50,9 @@ class Notice(Resource):
     @mails.response(400, 'Missing args')
     @mails.doc(description="Three presenters and their present date")
     def post(self):
-        handle_upload()
+        students = get_request_args("student", str)
+        students = students.split(',')
+        handle_upload(students)
         return make_response(jsonify({"message": "send success"}), 200)
 
 
@@ -66,6 +67,69 @@ class History(Resource):
         return make_response(jsonify({"message": "success", "data": data}), 200)
 
 
+@mails.route('/current')
+class Current(Resource):
+    @mails.response(200, 'Success')
+    def get(self):
+        names = []
+        data = query_db("select name from current")
+        for d in data:
+            names.append(d["name"])
+        return make_response(jsonify({"message": "success", "names": names}), 200)
 
 
+@mails.route('/get-user-info')
+class GetUserInfo(Resource):
+
+    @mails.response(200, 'Success')
+    @mails.doc(description="Return all the users with their username")
+    def get(self):
+        users = query_db("select * from contact")
+        for index, user in enumerate(users):
+            user["key"] = index + 1
+        return make_response(jsonify({"message": "success", "users": users}), 200)
+
+
+@mails.route('/edit')
+class GetUserInfo(Resource):
+
+    @mails.response(200, 'Success')
+    @mails.response(400, 'Missing args')
+    @mails.param("name", "Student name")
+    @mails.param("email", "Student email")
+    @mails.param("institution", "Student institution")
+    @mails.doc(description="Add new student")
+    def post(self):
+        name = get_request_args("name", str)
+        email = get_request_args("email", str)
+        institution = get_request_args("institution", str)
+
+        query_db("insert into contact values(?,?,?)", (name, email, institution, ))
+        return make_response(jsonify({"message": "success"}), 200)
+
+    @mails.response(200, 'Success')
+    @mails.param("name", "Student name")
+    @mails.param("email", "Student email")
+    @mails.response(400, 'Missing args')
+    @mails.doc(description="Update student information")
+    def put(self):
+        name = get_request_args("name", str)
+        email = get_request_args("email", str)
+
+        query_db("update contact set email = ? where name = ?", (email, name, ))
+        return make_response(jsonify({"message": "success"}), 200)
+
+
+@mails.route('/delete')
+class DeleteUserInfo(Resource):
+    @mails.response(200, 'Success')
+    @mails.param("name", "Student name")
+    @mails.response(400, 'Missing args')
+    @mails.doc(description="delete student information")
+    def post(self):
+        name = get_request_args("name", str)
+        print(name)
+
+        query_db("delete from contact where name = ?", (name,))
+        return make_response(jsonify({"message": "success"}), 200)
 

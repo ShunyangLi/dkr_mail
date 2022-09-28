@@ -58,7 +58,7 @@ def ics_gener_upload(attendees, start_date, end_date, filename):
     organizer = vCalAddress('MAILTO:yangzhengyi188@gmail.com')
     organizer.params['cn'] = vText('DKR')
     event['organizer'] = organizer
-    event['location'] = vText('Voov Online Meetings')
+    event['location'] = vText('WeChat Group')
 
     cal.add_component(event)
 
