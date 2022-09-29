@@ -1,20 +1,58 @@
 from app import api
 from flask import make_response, jsonify, request
 from flask_restplus import abort, Resource
-from utils.request_handling import get_request_args,get_header
+from utils.request_handling import get_request_args, get_header
 from utils.db_handling import query_db
 from utils.presenter_handling import handle_presenter, handle_upload
 from utils.update_presenter import update_presenter
+from utils.auth import generate_activate_token, check_token, get_token
 
 mails = api.namespace('user', description="Get all the user names")
 
 
+def check_login(token):
+    """
+    according to the token, check whether correct
+    :param token: the param token
+    :return:
+    """
+    user = query_db("SELECT * FROM User WHERE token = ?", (token, ))
+    if len(user) == 0:
+        abort(401, 'Incorrect token, please login')
+
+
+@mails.route('/login')
+class Login(Resource):
+
+    @mails.response(200, 'Success')
+    @mails.param("username", "Username")
+    @mails.param("password", "Password")
+    @mails.response(400, 'Missing args')
+    @mails.doc(description="Login")
+    def post(self):
+        username = get_request_args("username", str)
+        password = get_request_args("password", str)
+
+        res = query_db("select * from user where username = ? and password = ?", (username, password, ))
+        if len(res) == 0:
+            abort(403, "Username or password incorrect")
+
+        user = res[0]
+        token = get_token()
+        query_db("UPDATE User SET token = ? WHERE username = ?", (token, user["username"], ))
+
+        return make_response(jsonify({"message": "success", "token": token}), 200)
+
+
 @mails.route('/get-user')
+@mails.expect(mails.parser().add_argument('Authorization', "Your Authorization Token in the form 'Token <AUTH_TOKEN>'",
+                                        location='headers'))
 class GetUser(Resource):
 
     @mails.response(200, 'Success')
     @mails.doc(description="Return all the users with their username")
     def get(self):
+        check_login(get_header(request))
         names = []
         data = query_db("select name from contact")
         for user in data:
@@ -30,6 +68,8 @@ class Send(Resource):
     @mails.response(400, 'Missing args')
     @mails.doc(description="Three presenters and their present date")
     def post(self):
+        check_login(get_header(request))
+
         nstudents = get_request_args("nstudents", str)
         nnstudents = get_request_args("nnstudents", str)
 
@@ -52,6 +92,8 @@ class Notice(Resource):
     @mails.response(400, 'Missing args')
     @mails.doc(description="Three presenters and their present date")
     def post(self):
+        check_login(get_header(request))
+
         students = get_request_args("student", str)
         students = students.split(',')
         handle_upload(students)
@@ -64,6 +106,8 @@ class History(Resource):
     @mails.response(400, 'Missing args')
     @mails.doc(description="Three presenters and their present date")
     def get(self):
+        check_login(get_header(request))
+
         data = query_db("select name, count(name) as number from past group by name")
 
         return make_response(jsonify({"message": "success", "data": data}), 200)
@@ -73,6 +117,8 @@ class History(Resource):
 class Current(Resource):
     @mails.response(200, 'Success')
     def get(self):
+        check_login(get_header(request))
+
         names = []
         data = query_db("select name from current")
         for d in data:
@@ -86,6 +132,8 @@ class GetUserInfo(Resource):
     @mails.response(200, 'Success')
     @mails.doc(description="Return all the users with their username")
     def get(self):
+        check_login(get_header(request))
+
         users = query_db("select * from contact")
         for index, user in enumerate(users):
             user["key"] = index + 1
@@ -102,6 +150,8 @@ class GetUserInfo(Resource):
     @mails.param("institution", "Student institution")
     @mails.doc(description="Add new student")
     def post(self):
+        check_login(get_header(request))
+
         name = get_request_args("name", str)
         email = get_request_args("email", str)
         institution = get_request_args("institution", str)
@@ -115,6 +165,8 @@ class GetUserInfo(Resource):
     @mails.response(400, 'Missing args')
     @mails.doc(description="Update student information")
     def put(self):
+        check_login(get_header(request))
+
         name = get_request_args("name", str)
         email = get_request_args("email", str)
 
@@ -129,6 +181,8 @@ class DeleteUserInfo(Resource):
     @mails.response(400, 'Missing args')
     @mails.doc(description="delete student information")
     def post(self):
+        check_login(get_header(request))
+
         name = get_request_args("name", str)
         print(name)
 
@@ -141,6 +195,8 @@ class NextWeekP(Resource):
     @mails.response(200, 'Success')
     @mails.doc(description="return next week's presenters")
     def get(self):
+        check_login(get_header(request))
+
         data = query_db("select name, email, institution, present from current ")
         for index, d in enumerate(data):
             d["key"] = index + 1
@@ -149,6 +205,8 @@ class NextWeekP(Resource):
 
     @mails.response(400, 'Missing args')
     def put(self):
+        check_login(get_header(request))
+
         name = get_request_args("name", str)
         email = get_request_args("email", str)
         institution = get_request_args("institution", str)
@@ -164,6 +222,8 @@ class NNextWeekP(Resource):
     @mails.response(200, 'Success')
     @mails.doc(description="return next next week's presenters")
     def get(self):
+        check_login(get_header(request))
+
         data = query_db("select name, email, institution, present from next ")
         for index, d in enumerate(data):
             d["key"] = index + 1
@@ -172,6 +232,8 @@ class NNextWeekP(Resource):
 
     @mails.response(400, 'Missing args')
     def put(self):
+        check_login(get_header(request))
+
         name = get_request_args("name", str)
         email = get_request_args("email", str)
         institution = get_request_args("institution", str)

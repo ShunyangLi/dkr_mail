@@ -5,7 +5,8 @@ import { Icon, Layout, Badge, Row, Col } from "antd";
 const { Header } = Layout;
 
 const AppHeader = props => {
-  let { menuClick, menuToggle } = props;
+  let { menuClick, menuToggle, loginOut } = props;
+
   return (
     <Header className="header">
       <Row style={{ width: "100%" }}>
@@ -25,9 +26,7 @@ const AppHeader = props => {
           <div className="right">
             <div className="mr15" style={{ marginRight: "0.5em" }}>
               <Badge dot={true} offset={[-2, 0]}>
-                <a href="http://www.google.com/" style={{ color: "#000" }}>
-                  <Icon type="bell" />
-                </a>
+                <Icon type="logout" onClick={loginOut} />
               </Badge>
             </div>
           </div>

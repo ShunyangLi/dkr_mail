@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Column } from "@ant-design/plots";
-import CustomBreadcrumb from "@/components/CustomBreadcrumb/CustomBreadcrumb";
-import "./index.scss";
-import { message } from "antd";
 import axios from "@/api";
 import { API } from "@/api/config";
+import process_response from "@/utils/response";
+import CustomBreadcrumb from "@/components/CustomBreadcrumb/CustomBreadcrumb";
+import "./index.scss";
 
 class Result extends Component {
   constructor(props) {
@@ -63,7 +63,7 @@ class Result extends Component {
         console.log(this.state.config);
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
   }
 

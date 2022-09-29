@@ -11,6 +11,7 @@ const process_response = (err, msg = null) => {
         break;
       case 401:
         msg = "未授权，请重新登录(401)";
+        this.props.history.push("/login");
         break;
       case 403:
         msg = "拒绝访问(403)";

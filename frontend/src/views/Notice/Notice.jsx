@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Select, Form, Button, message } from "antd";
-import CustomBreadcrumb from "@/components/CustomBreadcrumb/CustomBreadcrumb";
 import axios from "@/api";
 import { API } from "@/api/config";
+import process_response from "@/utils/response";
+import { Select, Form, Button, message } from "antd";
+import CustomBreadcrumb from "@/components/CustomBreadcrumb/CustomBreadcrumb";
 
 const { Option } = Select;
 
@@ -29,7 +30,7 @@ class Notice extends Component {
         });
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
 
     axios
@@ -40,7 +41,7 @@ class Notice extends Component {
         });
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
   }
 
@@ -61,7 +62,7 @@ class Notice extends Component {
         message.success(res.data.message);
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
   };
 

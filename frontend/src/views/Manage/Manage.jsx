@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { message, Table, Button, Divider, Modal, Input, Select } from "antd";
 import axios from "@/api";
 import { API } from "@/api/config";
+import process_response from "@/utils/response";
+import CustomBreadcrumb from "@/components/CustomBreadcrumb";
+import { message, Table, Button, Divider, Modal, Input, Select } from "antd";
+
 import "./index.scss";
-import CustomBreadcrumb from "../../components/CustomBreadcrumb";
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -33,7 +35,7 @@ class Manage extends Component {
         });
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
   }
 
@@ -79,7 +81,7 @@ class Manage extends Component {
           })
           .catch(error => {
             console.log(error);
-            message.error(error.message);
+            process_response(error, error.response.data.message);
           });
       },
       onCancel() {}
@@ -112,7 +114,7 @@ class Manage extends Component {
         });
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
 
     let { data } = this.state;
@@ -220,7 +222,7 @@ class Manage extends Component {
         });
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
   };
 

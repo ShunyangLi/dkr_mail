@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { Layout, BackTop } from "antd";
+import { Layout, BackTop, message } from "antd";
 import routes from "../routes";
 import { menuToggleAction } from "../store/actionCreators";
 import menu from "./menu";
@@ -19,10 +19,24 @@ class DefaultLayout extends Component {
     menu: []
   };
 
+  isLogin = () => {
+    if (!localStorage.getItem("token")) {
+      this.props.history.push("/login");
+    }
+  };
+
+  loginOut = () => {
+    window.localStorage.clear();
+    this.props.history.push("/login");
+    message.success("Logout!");
+  };
+
   componentDidMount() {
     this.setState({
       menu: menu
     });
+
+    this.isLogin();
   }
 
   componentWillUnmount() {

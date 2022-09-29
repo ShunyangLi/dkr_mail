@@ -16,9 +16,10 @@ class loadingComponent extends Component {
   }
 }
 
-export default (loader, loading = loadingComponent) => {
+const ld = (loader, loading = loadingComponent) => {
   return Loadable({
     loader,
     loading
   });
 };
+export default ld;

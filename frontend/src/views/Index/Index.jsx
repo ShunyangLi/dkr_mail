@@ -1,11 +1,14 @@
 import React, { Component } from "react";
-import "@/style/view-style/index.scss";
-import CustomBreadcrumb from "../../components/CustomBreadcrumb";
-import { Button, Form, Icon, message, Select, DatePicker } from "antd";
+
 import axios from "@/api";
-import { API } from "@/api/config";
-import "./index.scss";
 import moment from "moment";
+import { API } from "@/api/config";
+import "@/style/view-style/index.scss";
+import process_response from "@/utils/response";
+import CustomBreadcrumb from "@/components/CustomBreadcrumb";
+import { Button, Form, message, Select, DatePicker } from "antd";
+
+import "./index.scss";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -40,6 +43,8 @@ class Index extends Component {
   }
 
   componentDidMount() {
+    // avoid error
+    axios.get(`${API}/user/get-user`, {});
     // fetch the user list for xx
     axios
       .get(`${API}/user/get-user`, {})
@@ -53,7 +58,7 @@ class Index extends Component {
         });
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
 
     axios
@@ -82,7 +87,7 @@ class Index extends Component {
         });
       })
       .catch(function(error) {
-        message.error(error.message);
+        process_response(error, error.response.data.message);
       });
   }
 
@@ -104,7 +109,7 @@ class Index extends Component {
             message.success(res.data.message);
           })
           .catch(function(error) {
-            message.error(error.message);
+            process_response(error, error.response.data.message);
           });
       }
     });
