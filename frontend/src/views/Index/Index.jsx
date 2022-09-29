@@ -64,10 +64,8 @@ class Index extends Component {
     axios
       .get(`${API}/user/next`, {})
       .then(res => {
-        let temp = [];
         let temp_date = "";
         res.data.data.forEach(item => {
-          temp.push(item.name);
           temp_date = item.present;
         });
 
@@ -82,8 +80,23 @@ class Index extends Component {
         ];
 
         this.setState({
-          next_student: temp,
           range_date: drange
+        });
+      })
+      .catch(function(error) {
+        process_response(error, error.response.data.message);
+      });
+
+    axios
+      .get(`${API}/user/nnext`, {})
+      .then(res => {
+        let temp = [];
+        res.data.data.forEach(item => {
+          temp.push(item.name);
+        });
+
+        this.setState({
+          next_student: temp
         });
       })
       .catch(function(error) {
