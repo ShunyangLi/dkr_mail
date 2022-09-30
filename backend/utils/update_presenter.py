@@ -38,8 +38,7 @@ def generate_params(is_current, email):
 def update_presenter(email, is_current):
     n1, n2, upload_date, current_date, next_date = generate_params(is_current, email)
 
-    # mails = [email, "yangzhengyi188@gmail.com"]
-    mails = ["shunyangli0@gmail.com"]
+    mails = [email, "yangzhengyi188@gmail.com"]
     if is_current:
         send_mail(mails, "Group Meeting Presentation", "notice", "Event",
                   n1=n1, n2=n2, current_date=current_date,

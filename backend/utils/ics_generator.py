@@ -1,6 +1,5 @@
 import os
 import pytz
-from pathlib import Path
 from datetime import datetime
 from icalendar import Calendar, Event, vCalAddress, vText
 
@@ -39,6 +38,7 @@ def ics_gener(attendees, start_date, end_date, filename):
 
 def ics_gener_upload(attendees, start_date, end_date, filename):
     """
+    generate ics file for mails
     date format: mm/dd/yyyy
     """
     cal = Calendar()
@@ -51,9 +51,9 @@ def ics_gener_upload(attendees, start_date, end_date, filename):
     sds = start_date.split('/')
     eds = end_date.split('/')
 
-    event.add('dtstart', datetime(int(sds[2]), int(sds[0]), int(sds[1]), 18, 0, 0, tzinfo=pytz.timezone('Australia/Sydney')))
+    event.add('dtstart', datetime(int(sds[2]), int(sds[0]), int(sds[1]), 19, 0, 0, tzinfo=pytz.timezone('Australia/Sydney')))
     event.add('dtend', datetime(int(eds[2]), int(eds[0]), int(eds[1]), 20, 0, 0, tzinfo=pytz.timezone('Australia/Sydney')))
-    event.add('dtstamp', datetime(int(sds[2]), int(sds[0]), int(sds[1]), 18, 0, 0, tzinfo=pytz.timezone('Australia/Sydney')))
+    event.add('dtstamp', datetime(int(sds[2]), int(sds[0]), int(sds[1]), 19, 0, 0, tzinfo=pytz.timezone('Australia/Sydney')))
 
     organizer = vCalAddress('MAILTO:yangzhengyi188@gmail.com')
     organizer.params['cn'] = vText('DKR')

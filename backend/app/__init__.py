@@ -9,8 +9,8 @@ app.config['SECRET_KEY'] = 'hard to guess what is the key'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'shunyangli0@gmail.com'
-app.config['MAIL_PASSWORD'] = 'deqgzlvsmsixqnqo'
+app.config['MAIL_USERNAME'] = 'nomoreprojectpls@gmail.com'
+app.config['MAIL_PASSWORD'] = 'pwlwxjlnmfioelfa'
 app.config['MAIL_DEFAULT_SENDER'] = 'nomoreprojectpls@gmail.com'
 api = Api(app)
 CORS(app)
