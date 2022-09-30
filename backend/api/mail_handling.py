@@ -1,4 +1,6 @@
+import pytz
 from app import api
+from datetime import datetime, timedelta
 from flask import make_response, jsonify, request
 from flask_restplus import abort, Resource
 from utils.request_handling import get_request_args, get_header
@@ -81,8 +83,7 @@ class Send(Resource):
 
         if len(nstudents) < 3 or len(nnstudents) < 3:
             abort(403, message="Not enough students")
-        # handle_presenter(nstudents, nnstudents, ndate, nndate)
-        print(nstudents, nnstudents, ndate, nndate)
+        handle_presenter(nstudents, nnstudents, ndate, nndate)
         return make_response(jsonify({"message": "send success"}), 200)
 
 
@@ -228,7 +229,11 @@ class NNextWeekP(Resource):
         for index, d in enumerate(data):
             d["key"] = index + 1
 
-        return make_response(jsonify({"message": "success", "data": data}), 200)
+        date = data[0]["present"].split('/')
+        current_date = datetime(int(date[2]), int(date[0]), int(date[1]), 14, 0, 0,
+                                tzinfo=pytz.timezone('Australia/Sydney'))
+        next_date = current_date - timedelta(days=7)
+        return make_response(jsonify({"message": "success", "data": data, "next": next_date.strftime("%m/%d/%Y")}), 200)
 
     @mails.response(400, 'Missing args')
     def put(self):

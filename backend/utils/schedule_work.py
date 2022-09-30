@@ -109,6 +109,9 @@ def reminder_students():
     mail_info = fetch_google_sheet(r_date)
     if mail_info is not None:
         mail_info = mail_info.split('\n')
+        while len(mail_info) < 3:
+            mail_info.append("Not updated yet")
+
         with app.app_context():
             send_mail(["shunyangli0@gmail.com"], "Presentation Details", "info", ics_path=None,
                       p1=mail_info[0], p2=mail_info[1], p3=mail_info[2])

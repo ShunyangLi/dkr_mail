@@ -62,41 +62,25 @@ class Index extends Component {
       });
 
     axios
-      .get(`${API}/user/next`, {})
-      .then(res => {
-        let temp_date = "";
-        res.data.data.forEach(item => {
-          temp_date = item.present;
-        });
-
-        let [month, day, year] = temp_date.split("/");
-        let date = new Date(+year, +month - 1, +day).addDays(8);
-        let date_string = date.toISOString().slice(0, 10);
-        [year, month, day] = date_string.split("-");
-        date_string = month + "/" + day + "/" + year;
-        let drange = [
-          moment(temp_date, dateFormat),
-          moment(date_string, dateFormat)
-        ];
-
-        this.setState({
-          range_date: drange
-        });
-      })
-      .catch(function(error) {
-        process_response(error, error.response.data.message);
-      });
-
-    axios
       .get(`${API}/user/nnext`, {})
       .then(res => {
         let temp = [];
+        let temp_date = "";
         res.data.data.forEach(item => {
           temp.push(item.name);
+          temp_date = item.present;
         });
 
+        let next_date = res.data.next;
+        let drange = [
+          moment(next_date, dateFormat),
+          moment(temp_date, dateFormat)
+        ];
+
         this.setState({
-          next_student: temp
+          next_student: temp,
+          range_date: drange,
+          date: [next_date, temp_date]
         });
       })
       .catch(function(error) {
