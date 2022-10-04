@@ -264,7 +264,7 @@ class Marking(Resource):
         files = get_request_file('file')
 
         for file in files:
-            filename = str(int(time.time())) + '.xlsx'
+            filename = str(int(time.time())) + '.' + file.filename.split('.')[-1]
             filepath = os.path.join(FILEDIR, filename)
             file.save(filepath)
             marking_handling(filepath, name)
@@ -277,5 +277,6 @@ class Marking(Resource):
         check_login(get_header(request))
 
         data = query_db("select name, sum(score) as score from marking group by name")
+        print(data)
 
         return make_response(jsonify({"message": "success", "data": data}), 200)

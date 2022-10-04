@@ -23,6 +23,11 @@ const menu = [
     key: "/manage",
     title: "Manage",
     icon: "manage"
+  },
+  {
+    key: "/marking",
+    title: "Marking",
+    icon: "marking"
   }
 ];
 
