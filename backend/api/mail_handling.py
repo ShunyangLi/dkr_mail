@@ -1,16 +1,21 @@
+import os
 import pytz
+import time
 from app import api
-from datetime import datetime, timedelta
-from flask import make_response, jsonify, request
-from flask_restplus import abort, Resource
-from utils.request_handling import get_request_args, get_header
+from utils.auth import get_token
 from utils.db_handling import query_db
-from utils.presenter_handling import handle_presenter, handle_upload
+from datetime import datetime, timedelta
+from flask_restplus import abort, Resource
+from flask import make_response, jsonify, request
 from utils.update_presenter import update_presenter
-from utils.auth import generate_activate_token, check_token, get_token
+from utils.presenter_handling import handle_presenter, handle_upload
+from utils.marking_handling import marking_handling
 
+
+from utils.request_handling import get_request_args, get_header, get_request_file
 mails = api.namespace('user', description="Get all the user names")
-
+HOME = os.getcwd()
+FILEDIR = os.path.join(HOME, 'static')
 
 def check_login(token):
     """
@@ -248,3 +253,29 @@ class NNextWeekP(Resource):
         return make_response(jsonify({"message": "success"}), 200)
 
 
+@mails.route('/marking')
+class Marking(Resource):
+    @mails.response(200, 'Success')
+    @mails.doc(description="upload marking file")
+    def post(self):
+        check_login(get_header(request))
+
+        name = get_request_args("name", str)
+        files = get_request_file('file')
+
+        for file in files:
+            filename = str(int(time.time())) + '.xlsx'
+            filepath = os.path.join(FILEDIR, filename)
+            file.save(filepath)
+            marking_handling(filepath, name)
+
+        return make_response(jsonify({"message": "success"}), 200)
+
+    @mails.response(200, 'Success')
+    @mails.doc(description="get all the marking for all students")
+    def get(self):
+        check_login(get_header(request))
+
+        data = query_db("select name, sum(score) as score from marking group by name")
+
+        return make_response(jsonify({"message": "success", "data": data}), 200)

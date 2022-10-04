@@ -13,4 +13,6 @@ app.config['MAIL_USERNAME'] = 'nomoreprojectpls@gmail.com'
 app.config['MAIL_PASSWORD'] = 'pwlwxjlnmfioelfa'
 app.config['MAIL_DEFAULT_SENDER'] = 'nomoreprojectpls@gmail.com'
 api = Api(app)
+# api = Api()
+# api.init_app(app, add_specs=False)
 CORS(app)

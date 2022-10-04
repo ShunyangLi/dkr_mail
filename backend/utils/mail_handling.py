@@ -17,6 +17,15 @@ def start_send(app, message):
 
 # send the mail with html template
 def send_mail(recipients, title, template, ics_path, **kwargs):
+    """
+    send mail with/without files
+    @param recipients: recipient emails
+    @param title: email title
+    @param template: the html template
+    @param ics_path: if is none then ignore
+    @param kwargs: html args
+    @return:
+    """
     message = Message(title, recipients=recipients, sender=('Shunyang Li', 'nomoreprojectpls@gmail.com'))
     message.html = render_template(template + '.html', **kwargs)
     if ics_path is not None:

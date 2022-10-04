@@ -5,9 +5,15 @@ from icalendar import Calendar, Event, vCalAddress, vText
 
 HOMEPATH = os.getcwd()
 
+
 def ics_gener(attendees, start_date, end_date, filename):
     """
     date format: mm/dd/yyyy
+    @param attendees: email list
+    @param start_date: start date string format
+    @param end_date: end date string format
+    @param filename: the generated file name
+    @return:
     """
     cal = Calendar()
     for attendee in attendees:
