@@ -46,7 +46,7 @@ def marking_handling(filepath, student):
     @return:
     """
     if "xlsx" in filepath:
-        print(filepath)
+        # print(filepath)
         filepath = file_processing(filepath)
     marking = cal_all_average(filepath)
     query_db("insert into marking values(?, ?)", (student, float(marking), ))

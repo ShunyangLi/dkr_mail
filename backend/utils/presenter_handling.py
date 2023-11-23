@@ -101,7 +101,7 @@ def handle_presenter(nstudents, nnstudents, ndate, nndate):
     n1, n_emails, upload_date = handle_next(nstudents, ndate)
     n2, nn_emails = handle_next_next (nnstudents, nndate)
 
-    n_emails.append("yangzhengyi188@gmail.com")
+    n_emails.append("jianwei.wang1@unsw.edu.au")
 
     send_mail(n_emails, "Group Meeting Presentation", "notice", "Event",
               n1=n1, n2=n2, current_date=ndate, upload_date=upload_date, next_date=nndate)
@@ -123,7 +123,7 @@ def handle_upload(students):
 
     mails = {
         'ZJ': 'yanpingw.zjgsu@gmail.com',
-        'SYD': 'yangzhengyi188@gmail.com',
+        'SYD': 'jianwei.wang1@unsw.edu.au',
         'GZ': 'omicronwang@gmail.com',
         'SH': '2294622497@qq.com'
     }

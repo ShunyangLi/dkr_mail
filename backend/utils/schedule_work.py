@@ -118,7 +118,7 @@ def reminder_students():
 
 
 # execute the code every thu at 18:30
-@scheduler.task('cron', id='do_job_3', week='*', day_of_week='thu', hour=18, minute=30)
+@scheduler.task('cron', id='do_job_3', week='*', day_of_week='thu', hour=11, minute=30)
 def job3():
     reminder_students()
 

@@ -86,7 +86,7 @@ class Send(Resource):
         nstudents = nstudents.split(',')
         nnstudents = nnstudents.split(',')
 
-        if len(nstudents) < 3 or len(nnstudents) < 3:
+        if len(nstudents) < 1 or len(nnstudents) < 1:
             abort(403, message="Not enough students")
         handle_presenter(nstudents, nnstudents, ndate, nndate)
         return make_response(jsonify({"message": "send success"}), 200)
@@ -276,7 +276,8 @@ class Marking(Resource):
     def get(self):
         check_login(get_header(request))
 
-        data = query_db("select name, sum(score) as score from marking group by name")
-        print(data)
+        data = query_db("select name, max(score) as score from marking group by name order by max(score)")
+        # print(data)
 
         return make_response(jsonify({"message": "success", "data": data}), 200)
+
