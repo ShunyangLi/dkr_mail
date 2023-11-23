@@ -13,6 +13,9 @@
 
 `apache2` contains `apache2` config files, `backend` contains the backend code, `frontend` source code for frontend, `html` the built frontend.
 
+## Before start
+Please change the mail configuration [__init__.py](./backend/app/__init__.py), which is `TODO` now.
+
 ## build docker image
 ```shell
 docker build --no-cache -t dkr_mail .
